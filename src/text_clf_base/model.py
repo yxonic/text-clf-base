@@ -20,7 +20,8 @@ class TextClf(L.LightningModule):
         return loss
 
     def configure_optimizers(self):
-        return optim.Adam(self.parameters(), lr=1e-3, betas=(0.9, 0.98))
+        # following RoBERTa
+        return optim.Adam(self.parameters(), lr=1e-3, betas=(0.9, 0.98), eps=1e-6, weight_decay=0.01)
 
     def forward(self, x):
         x = self.embed(x)
