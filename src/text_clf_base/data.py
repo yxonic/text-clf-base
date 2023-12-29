@@ -20,6 +20,6 @@ class TextClfDataset(Dataset):
 
     def __getitem__(self, idx):
         return (
-            torch.tensor(self.tokenizer.encode(self.data[idx]).ids),
+            torch.tensor(self.tokenizer.encode("[CLS] " + self.data[idx]).ids),
             torch.tensor(self.label[idx]),
         )
