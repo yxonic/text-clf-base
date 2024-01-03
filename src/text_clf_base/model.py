@@ -4,13 +4,22 @@ import torch.nn.functional as F
 import torchmetrics as M
 from torch import nn, optim
 
+from text_clf_base.util import get_tokenizer
+
 
 class TextClf(L.LightningModule):
-    def __init__(self, vocab_size, d_model=512, num_layers=4, nhead=8):
+    def __init__(self, d_model=512, num_layers=4, nhead=8):
         super().__init__()
+
+        # lightning setup
+        self.save_hyperparameters()
         self.example_input_array = torch.ones(32, 128).long()
+
+        # store evaluation results
         self.predictions = []
 
+        # model
+        vocab_size = get_tokenizer().get_vocab_size()
         self.embed = nn.Embedding(vocab_size, d_model)
         self.model = nn.TransformerEncoder(
             nn.TransformerEncoderLayer(d_model=d_model, nhead=nhead, activation="gelu", batch_first=True),

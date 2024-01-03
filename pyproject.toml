@@ -30,6 +30,7 @@ dependencies = [
   "torchmetrics",
   "polars",
   "tensorboard",
+  "jsonargparse[signatures]",
 ]
 
 [project.urls]
@@ -69,6 +70,12 @@ dependencies = [
 ]
 [tool.hatch.envs.types.scripts]
 check = "mypy --install-types --non-interactive {args:src/text_clf_base tests}"
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore:pkg_resources",
+    "ignore:Deprecated call to `pkg_resources"
+]
 
 [tool.coverage.run]
 source_pkgs = ["text_clf_base", "tests"]

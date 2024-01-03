@@ -2,6 +2,12 @@ import linecache
 import subprocess
 import sys
 
+import tokenizers
+
+
+def get_tokenizer() -> tokenizers.Tokenizer:
+    return tokenizers.Tokenizer.from_pretrained("bert-base-chinese")
+
 
 class Lines:
     def __init__(self, filename, *, skip=0, group=1, preserve_newline=False):
