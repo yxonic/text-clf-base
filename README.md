@@ -8,7 +8,14 @@
 
 ## Installation
 
-To install the package, run the following command in your terminal:
+**Change project name to your own before using this template**:
+
+```console
+mv src/text_clf_base src/YOUR_PROJECT_NAME
+fd -t f . -x sed -i '' 's/text_clf_base/YOUR_PROJECT_NAME/g'
+```
+
+Then, to run this project, install the package in editable mode:
 
 ```console
 pip install -e .

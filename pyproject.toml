@@ -3,26 +3,14 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "text-clf-base"
+name = "text_clf_base"
 dynamic = ["version"]
 description = ''
 readme = "README.md"
-requires-python = ">=3.8,<3.12"
+requires-python = ">=3.8,<3.12" # for pytorch compatibility
 license = "MIT"
 keywords = []
-authors = [
-  { name = "Yin Yu", email = "yxonic@gmail.com" },
-]
-classifiers = [
-  "Development Status :: 4 - Beta",
-  "Programming Language :: Python",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: Implementation :: PyPy",
-]
+authors = [{ name = "Yin Yu", email = "yxonic@gmail.com" }]
 dependencies = [
   "torch",
   "tokenizers",
@@ -32,11 +20,6 @@ dependencies = [
   "tensorboard",
   "jsonargparse[signatures]",
 ]
-
-[project.urls]
-Documentation = "https://github.com/yxonic/text-clf-base#readme"
-Issues = "https://github.com/yxonic/text-clf-base/issues"
-Source = "https://github.com/yxonic/text-clf-base"
 
 [tool.hatch.version]
 path = "src/text_clf_base/__about__.py"
@@ -49,55 +32,34 @@ dependencies = [
   "python-lsp-server",
   "python-lsp-ruff",
 ]
+
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
 test-cov = "coverage run -m pytest {args:tests}"
-cov-report = [
-  "- coverage combine",
-  "coverage report",
-]
-cov = [
-  "test-cov",
-  "cov-report",
-]
-
-[[tool.hatch.envs.all.matrix]]
-python = ["3.8", "3.9", "3.10", "3.11"]
-
-[tool.hatch.envs.types]
-dependencies = [
-  "mypy>=1.0.0",
-]
-[tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/text_clf_base tests}"
-
-[tool.pytest.ini_options]
-filterwarnings = [
-    "ignore:pkg_resources",
-    "ignore:Deprecated call to `pkg_resources"
-]
-
-[tool.coverage.run]
-source_pkgs = ["text_clf_base", "tests"]
-branch = true
-parallel = true
-omit = [
-  "src/text_clf_base/__about__.py",
-]
-
-[tool.coverage.paths]
-text_clf_base = ["src/text_clf_base", "*/text-clf-base/src/text_clf_base"]
-tests = ["tests", "*/text-clf-base/tests"]
-
-[tool.coverage.report]
-exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-]
+cov-report = ["- coverage combine", "coverage report"]
+cov = ["test-cov", "cov-report"]
 
 [tool.ruff]
 extend = "ruff_defaults.toml"
 
 [tool.hatch.envs.hatch-static-analysis]
 config-path = "ruff_defaults.toml"
+
+[tool.pytest.ini_options]
+filterwarnings = [
+  "ignore:pkg_resources",
+  "ignore:Deprecated call to `pkg_resources",
+]
+
+[tool.coverage.run]
+source_pkgs = ["text_clf_base", "tests"]
+branch = true
+parallel = true
+omit = ["src/text_clf_base/__about__.py"]
+
+[tool.coverage.paths]
+text_clf_base = ["src/text_clf_base", "*/text_clf_base/src/text_clf_base"]
+tests = ["tests", "*/text_clf_base/tests"]
+
+[tool.coverage.report]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
