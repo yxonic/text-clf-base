@@ -1,19 +1,31 @@
 # text-clf-base
 
-[![PyPI - Version](https://img.shields.io/pypi/v/text-clf-base.svg)](https://pypi.org/project/text-clf-base)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/text-clf-base.svg)](https://pypi.org/project/text-clf-base)
-
------
-
 **Table of Contents**
 
 - [Installation](#installation)
+- [Development](#development)
 - [License](#license)
 
 ## Installation
 
+To install the package, run the following command in your terminal:
+
 ```console
-pip install text-clf-base
+pip install -e .
+```
+
+## Development
+
+To set up a development environment for the package, first install `hatch`:
+
+```console
+pipx install hatch  # or: brew install hatch
+```
+
+Then, run the following command in your terminal:
+
+```console
+hatch shell
 ```
 
 ## License

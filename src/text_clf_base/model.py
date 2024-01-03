@@ -34,19 +34,31 @@ class TextClf(L.LightningModule):
         self.log("train_loss", loss, prog_bar=True)
         return loss
 
-    def validation_step(self, batch, _):
+    def validation_step(self, batch):
         x, y = batch
         y_ = self(x)
-        loss = F.binary_cross_entropy_with_logits(y_, y.float())
-        self.log("valid_loss", loss)
+        cross_entropy = F.binary_cross_entropy_with_logits(y_, y.float())
+        self.log("cross_entropy", cross_entropy)
         self.predictions.append(torch.sigmoid(y_))
         return y_
 
-    def on_validation_epoch_end(self):
-        y_pred = torch.cat(self.predictions)
-        self.predictions.clear()  # free memory
-        y_true = torch.tensor(self.trainer.val_dataloaders.dataset.label[: y_pred.size(0)])
+    def test_step(self, batch):
+        self.validation_step(batch)
+
+    def log_metrics(self, y_pred, y_true):
         self.log("precision", M.functional.precision(y_pred, y_true, "binary"))
         self.log("recall", M.functional.recall(y_pred, y_true, "binary"))
         self.log("f1", M.functional.f1_score(y_pred, y_true, "binary"))
         self.log("auc", M.functional.auroc(y_pred, y_true, "binary"))
+
+    def on_validation_epoch_end(self):
+        y_pred = torch.cat(self.predictions)
+        self.predictions.clear()
+        y_true = torch.tensor(self.trainer.val_dataloaders.dataset.label[: y_pred.size(0)])
+        self.log_metrics(y_pred, y_true)
+
+    def on_test_epoch_end(self):
+        y_pred = torch.cat(self.predictions)
+        self.predictions.clear()
+        y_true = torch.tensor(self.trainer.test_dataloaders.dataset.label[: y_pred.size(0)])
+        self.log_metrics(y_pred, y_true)

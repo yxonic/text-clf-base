@@ -1,5 +1,4 @@
 {
-  "python.formatting.provider": null,
   "[python]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "charliermarsh.ruff"
