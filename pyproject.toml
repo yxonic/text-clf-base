@@ -32,6 +32,7 @@ dependencies = [
   "python-lsp-server",
   "python-lsp-ruff",
 ]
+path = "venv"
 
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
