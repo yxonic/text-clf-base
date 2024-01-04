@@ -47,7 +47,7 @@ class TextClf(L.LightningModule):
         x, y = batch
         y_ = self(x)
         cross_entropy = F.binary_cross_entropy_with_logits(y_, y.float())
-        self.log("cross_entropy", cross_entropy)
+        self.log("cross_entropy", cross_entropy, sync_dist=True)
         self.predictions.append(torch.sigmoid(y_))
         return y_
 
@@ -58,10 +58,11 @@ class TextClf(L.LightningModule):
         y_pred = torch.cat(self.predictions)
         self.predictions.clear()
         y_true = torch.tensor(dataloader.dataset.label[: y_pred.size(0)])
-        self.log("precision", M.functional.precision(y_pred, y_true, "binary"))
-        self.log("recall", M.functional.recall(y_pred, y_true, "binary"))
-        self.log("f1", M.functional.f1_score(y_pred, y_true, "binary"))
-        self.log("auc", M.functional.auroc(y_pred, y_true, "binary"))
+        y_pred = y_pred.to(y_true.device)
+        self.log("precision", M.functional.precision(y_pred, y_true, "binary"), sync_dist=True)
+        self.log("recall", M.functional.recall(y_pred, y_true, "binary"), sync_dist=True)
+        self.log("f1", M.functional.f1_score(y_pred, y_true, "binary"), sync_dist=True)
+        self.log("auc", M.functional.auroc(y_pred, y_true, "binary"), sync_dist=True)
 
     def on_validation_epoch_end(self):
         self.calc_epoch_metrics(self.trainer.val_dataloaders)
