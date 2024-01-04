@@ -54,20 +54,17 @@ class TextClf(L.LightningModule):
     def test_step(self, batch):
         self.validation_step(batch)
 
-    def log_metrics(self, y_pred, y_true):
+    def calc_epoch_metrics(self, dataloader):
+        y_pred = torch.cat(self.predictions)
+        self.predictions.clear()
+        y_true = torch.tensor(dataloader.dataset.label[: y_pred.size(0)])
         self.log("precision", M.functional.precision(y_pred, y_true, "binary"))
         self.log("recall", M.functional.recall(y_pred, y_true, "binary"))
         self.log("f1", M.functional.f1_score(y_pred, y_true, "binary"))
         self.log("auc", M.functional.auroc(y_pred, y_true, "binary"))
 
     def on_validation_epoch_end(self):
-        y_pred = torch.cat(self.predictions)
-        self.predictions.clear()
-        y_true = torch.tensor(self.trainer.val_dataloaders.dataset.label[: y_pred.size(0)])
-        self.log_metrics(y_pred, y_true)
+        self.calc_epoch_metrics(self.trainer.val_dataloaders)
 
     def on_test_epoch_end(self):
-        y_pred = torch.cat(self.predictions)
-        self.predictions.clear()
-        y_true = torch.tensor(self.trainer.test_dataloaders.dataset.label[: y_pred.size(0)])
-        self.log_metrics(y_pred, y_true)
+        self.calc_epoch_metrics(self.trainer.test_dataloaders)
